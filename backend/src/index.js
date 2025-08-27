@@ -1,20 +1,38 @@
 import express from "express";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
-import cookieParser from "cookie-parser"; 
-
+import cookieParser from "cookie-parser";
+import authRouter from "./routes/userAuth.js";
+import client from "./config/redis.js";
+import redisClient from "./config/redis.js";
 
 dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-connectDB()
-  .then(async () => {
+app.use("/user", authRouter);
+
+const InitalizeConnection = async () => {
+  try {
+    await Promise.all([connectDB(), redisClient.connect()]);
+    console.log("DB Connected");
+
     app.listen(process.env.PORT, () => {
       console.log(`Server is running on port ${process.env.PORT}`);
     });
-  })
-  .catch((err) => {
-    console.log("Database connection failed", err);
-  });
+  } catch (error) {
+    console.log("Error: ", error);
+  }
+};
+
+InitalizeConnection();
+// connectDB()
+//   .then(async () => {
+//     app.listen(process.env.PORT, () => {
+//       console.log(`Server is running on port ${process.env.PORT}`);
+//     });
+//   })
+//   .catch((err) => {
+//     console.log("Database connection failed", err);
+//   });

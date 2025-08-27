@@ -1,5 +1,5 @@
 import express from "express";
-import { login, register } from "../controllers/userAuthentication.js";
+import { getProfile, login, logout, register } from "../controllers/userAuthentication.js";
 
 
 const authRouter = express.Router();
@@ -12,3 +12,6 @@ authRouter.post("/login", login);
 authRouter.post("/logout", logout);
 // getProfile
 authRouter.get("/profile", getProfile);
+
+
+export default authRouter;
