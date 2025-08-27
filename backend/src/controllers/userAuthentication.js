@@ -20,4 +20,23 @@ export const register =  async (req, res) => {
     }
 }
 
+export const login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        if(!email) 
+            throw new Error("Invalid Credentils");
+        if(!password) 
+            throw new Error("Invalid Credentils");
+        const user = await User.findOne({email});
+        const match = bcrypt.compare(password, user.password);
+        if(!match) 
+            throw new Error("Invalid Credentils");
+        const token = jwt.sign({_id:user._id, email: email},process.env.JWT_SECRET, {expiresIn: 60*60});
+        res.cookie('token', token, {maxAge: 60*60*1000});
+        res.status(200).json({message: "User Logged In Successfully"});
+    } 
+    catch(error){
+        res.status(400).json({message: error.message});
+    }
+}
  
