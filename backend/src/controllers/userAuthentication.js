@@ -12,7 +12,7 @@ export const register = async (req, res) => {
     req.body.role = "user";
     const user = await User.create(req.body);
     const token = jwt.sign(
-      { _id: user._id, email: email, role: 'user' },
+      { _id: user._id, email: email, role: "user" },
       process.env.JWT_SECRET,
       { expiresIn: 60 * 60 }
     );
@@ -71,7 +71,22 @@ export const logout = async (req, res) => {
   }
 };
 
-
 export const adminRegister = async (req, res) => {
-
-}
+  try {
+   //  if(req.user.role != "admin") throw new Error("Unauthorized Access");
+    validate(req.body);
+    const { firstName, email, password } = req.body;
+    req.body.password = await bcrypt.hash(password, 12);
+    req.body.role = "admin";
+    const user = await User.create(req.body);
+    const token = jwt.sign(
+      { _id: user._id, email: email, role: "admin" },
+      process.env.JWT_SECRET,
+      { expiresIn: 60 * 60 }
+    ); 
+    res.cookie("token", token, { maxAge: 60 * 60 * 1000 });
+    res.status(201).json({ message: "Admin Registered Successfully", user });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
