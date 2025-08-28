@@ -77,10 +77,10 @@ export const adminRegister = async (req, res) => {
     validate(req.body);
     const { firstName, email, password } = req.body;
     req.body.password = await bcrypt.hash(password, 12);
-    req.body.role = "admin";
+    // req.body.role = "admin";
     const user = await User.create(req.body);
     const token = jwt.sign(
-      { _id: user._id, email: email, role: "admin" },
+      { _id: user._id, email: email, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: 60 * 60 }
     ); 
