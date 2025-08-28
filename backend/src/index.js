@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/userAuth.js";
-import client from "./config/redis.js";
 import redisClient from "./config/redis.js";
 
 dotenv.config();
@@ -27,12 +26,3 @@ const InitalizeConnection = async () => {
 };
 
 InitalizeConnection();
-// connectDB()
-//   .then(async () => {
-//     app.listen(process.env.PORT, () => {
-//       console.log(`Server is running on port ${process.env.PORT}`);
-//     });
-//   })
-//   .catch((err) => {
-//     console.log("Database connection failed", err);
-//   });

@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+// import redisClient from "../config/redis";
  
 
 const userMiddleware = async (req, res, next) => {
@@ -22,3 +23,5 @@ const userMiddleware = async (req, res, next) => {
         res.status(400).json({message: error.message});
     }
 }
+
+export default userMiddleware;
