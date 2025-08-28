@@ -9,9 +9,10 @@ export const register = async (req, res) => {
     validate(req.body);
     const { firstName, email, password } = req.body;
     req.body.password = await bcrypt.hash(password, 12);
+    req.body.role = "user";
     const user = await User.create(req.body);
     const token = jwt.sign(
-      { _id: user._id, email: email },
+      { _id: user._id, email: email, role: 'user' },
       process.env.JWT_SECRET,
       { expiresIn: 60 * 60 }
     );
@@ -31,7 +32,7 @@ export const login = async (req, res) => {
     const match = bcrypt.compare(password, user.password);
     if (!match) throw new Error("Invalid Credentils");
     const token = jwt.sign(
-      { _id: user._id, email: email },
+      { _id: user._id, email: email, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: 60 * 60 }
     );
@@ -44,23 +45,33 @@ export const login = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
-    // Token add kar dunga Radis ke blockList
     const { token } = req.cookies;
+
+    if (!token) {
+      return res.status(400).json({ message: "Token not found" });
+    }
+
     const payload = jwt.decode(token);
-    await redisClient.set(`token:${token}`, `Blocked`);
-    await redisClient.expireAt(`token:${token}`, payload.exp);
-    // Cookies ko clear kar dennge..
-    res.clearCookie("token", null, Date.now());
+
+    if (!payload || !payload.exp) {
+      return res.status(400).json({ message: "Invalid token" });
+    }
+
+    // Block token in Redis
+    await redisClient.set(`token:${token}`, "Blocked", {
+      EXAT: payload.exp,
+    });
+
+    // Clear cookie
+    res.clearCookie("token", { expires: new Date(0), httpOnly: true });
+
     res.status(200).json({ message: "User Logged Out Successfully" });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
-export const getProfile = async (req, res) => {
-  try {
-    res.send("Hello jee");
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+
+export const adminRegister = async (req, res) => {
+
+}
