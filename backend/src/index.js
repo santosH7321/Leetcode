@@ -4,6 +4,7 @@ import connectDB from "./config/db.js";
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/userAuth.js";
 import redisClient from "./config/redis.js";
+import problemRouter from "./routes/problem.route.js";
 
 dotenv.config();
 const app = express();
@@ -11,6 +12,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/user", authRouter);
+app.use("/problem", problemRouter);
 
 const InitalizeConnection = async () => {
   try {
@@ -26,3 +28,4 @@ const InitalizeConnection = async () => {
 };
 
 InitalizeConnection();
+
