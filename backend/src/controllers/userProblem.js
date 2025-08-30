@@ -11,14 +11,17 @@ const createProblem = async (req, res) => {
 
             const languageId = getLanguageById(language);
             // i am creating Batch Submission
-            const submission = visibleTestCases.map((input, output) => ({
+            const submission = visibleTestCases.map((testcase) => ({
                 source_code:completeCode,
                 language_id: languageId,
-                stdin: input,
-                expected_output: output
+                stdin: testcase.input,
+                expected_output: testcase.output
             }));
 
             const submitResult = await submitBatch(submission);
+
+            
+
         }
     } 
     catch (error) {
