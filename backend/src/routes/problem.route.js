@@ -1,6 +1,6 @@
 import express from "express";
 import adminMiddleware from "../middleware/adminMiddleware.js";
-import {createProblem, deleteProblem, updateProblem, getProblemById, getAllProblem} from "../controllers/userProblem.js";
+import {createProblem, deleteProblem, updateProblem, getProblemById, getAllProblem, solvedAllProblemByUser} from "../controllers/userProblem.js";
 import userMiddleware from "../middleware/userMiddleware.js";
 
 

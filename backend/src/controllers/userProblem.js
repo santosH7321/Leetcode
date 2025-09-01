@@ -117,7 +117,7 @@ export const deleteProblem = async (req, res) => {
     }
 }
 
-export default getProblemById = async (req, res) => {
+export const getProblemById = async (req, res) => {
     const {id} = req.params;
     try {
         if(!id)
@@ -133,3 +133,17 @@ export default getProblemById = async (req, res) => {
     }
 }
 
+export const getAllProblem = async (req, res) => {
+    try {
+        const getProblem = await Problem.find({});
+        if(getProblem.length==0)
+            return res.status(404).send("Problem is Missing");
+        res.status(200).send(getProblem)
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+}
+
+export const solvedAllProblemByUser = async (req, res) => {
+    
+}
