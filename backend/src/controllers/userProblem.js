@@ -116,3 +116,20 @@ export const deleteProblem = async (req, res) => {
         res.status(500).json({message: "Error" + error.message})
     }
 }
+
+export default getProblemById = async (req, res) => {
+    const {id} = req.params;
+    try {
+        if(!id)
+            return res.status(400).send("ID is Missing");
+        const getProblem = await Problem.findById(id);
+
+        if(!getProblem)
+            return res.status(200).send("Problem is Missing");
+
+        res.status(200).send(getProblem);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+}
+
