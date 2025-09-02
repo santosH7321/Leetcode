@@ -1,6 +1,6 @@
 import express from "express";
 import adminMiddleware from "../middleware/adminMiddleware.js";
-import {createProblem, deleteProblem, updateProblem, getProblemById, getAllProblem, solvedAllProblemByUser} from "../controllers/userProblem.js";
+import {createProblem, deleteProblem, updateProblem, getProblemById, getAllProblem, solvedAllProblemByUser, submittedProblem} from "../controllers/userProblem.js";
 import userMiddleware from "../middleware/userMiddleware.js";
 
 
@@ -14,6 +14,6 @@ problemRouter.delete("/delete/:id",adminMiddleware, deleteProblem);
 problemRouter.get("/problemById/:id",userMiddleware, getProblemById);
 problemRouter.get("/getAllProblem",userMiddleware, getAllProblem);
 problemRouter.get("/problemSolvedByUser",userMiddleware, solvedAllProblemByUser);
-
+problemRouter.get("/submittedProblem/:pid", userMiddleware, submittedProblem)
 
 export default problemRouter;

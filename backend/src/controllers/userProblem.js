@@ -1,6 +1,7 @@
 import { getLanguageById, submitBatch } from "../utils/problemUtility.js";
 import Problem from "../models/problem.js";
 import User from "../models/user.model.js";
+import Submission from "../models/submission.js";
 
 export const createProblem = async (req, res) => {
   const {
@@ -157,3 +158,19 @@ export const solvedAllProblemByUser = async (req, res) => {
     res.status(500).send("Server Error");
   }   
 }
+
+export const submittedProblem = async (req, res) => {
+  try {
+    const userId = req.result._id;
+    const problemId = req.params.pid;
+
+    const ans = await Submission.find({userId, problemId});
+    if(ans.length==0) {
+      res.status(200).send("No Submission is persent");
+    }
+    res.status(200).send(ans);
+  } catch (error) {
+    res.status(500).send("Internal server error");
+  }
+}
+
