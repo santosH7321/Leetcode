@@ -3,6 +3,7 @@ import User from "../models/user.model.js";
 import validate from "../utils/validator.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import Submission from "../models/submission.js"
 
 export const register = async (req, res) => {
   try {
@@ -90,3 +91,16 @@ export const adminRegister = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+export const deleteProfile = async (req, res) => {
+  try {
+    const userId = req.result._id;
+    // userSchema delete
+    await User.findByIdAndDelete(userId);
+    //submission se bhi delete karo...
+    // await Submission.deleteMany({userId});
+    res.status(200).send("Deleted Successfully");
+  } catch (error) {
+    res.status(500).send("Internal Server Error");
+  }
+}
