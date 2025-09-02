@@ -69,10 +69,20 @@ const submitCode = async (req, res) => {
     submittedResult.memory = memory;
     await submittedResult.save();
 
+    // ProblemId ko insert karenge  userSchema ke problemSolved mein if it is not persent there.
+
+    // req.result = user ka information hai
+    if(!req.result.problemSolved.include(problemId)){
+      req.result.problemSolved.push(problemId);
+      await req.result.save();
+    }
+
     res.status(201).send(submittedResult);
   } catch (error) {
     res.status(500).send("Internal server error" + error);
   }
 };
+
+
 
 export default submitCode;

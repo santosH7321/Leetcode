@@ -1,5 +1,6 @@
 import { getLanguageById, submitBatch } from "../utils/problemUtility.js";
 import Problem from "../models/problem.js";
+import User from "../models/user.model.js";
 
 export const createProblem = async (req, res) => {
   const {
@@ -145,5 +146,14 @@ export const getAllProblem = async (req, res) => {
 }
 
 export const solvedAllProblemByUser = async (req, res) => {
-    
-} 
+  try {
+    const userId = req.result._id;
+    const user = await User.findById(userId).populate({
+      path: "problemSolved",
+      select: "_id title difficulty tags"
+    });
+    res.status(200).send(user.problemSolved);
+  } catch (error) {
+    res.status(500).send("Server Error");
+  }   
+}

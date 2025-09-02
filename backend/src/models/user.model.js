@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 
 const userSchema = new mongoose.Schema({
@@ -32,8 +32,11 @@ const userSchema = new mongoose.Schema({
         default: 'user'
     },
     problemSolved: {
-        type: [String],
-
+        type: [{
+            type: Schema.Types.ObjectId,
+            ref: 'problem'
+        }],
+        unique: true
     },
     password: {
         type: String,
