@@ -17,8 +17,16 @@ export const register = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: 60 * 60 }
     );
+     const reply = {
+      firstName: user.firstName,
+      email: user.email,
+      _id: user._id
+    }
     res.cookie("token", token, { maxAge: 60 * 60 * 1000 });
-    res.status(201).json({ message: "User Registered Successfully", user });
+    res.status(201).json({ 
+      user: reply,
+      message: "User Registered Successfully"
+    });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -32,13 +40,23 @@ export const login = async (req, res) => {
     const user = await User.findOne({ email });
     const match = bcrypt.compare(password, user.password);
     if (!match) throw new Error("Invalid Credentils");
+
+    const reply = {
+      firstName: user.firstName,
+      email: user.email,
+      _id: user._id
+    }
+
     const token = jwt.sign(
       { _id: user._id, email: email, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: 60 * 60 }
     );
     res.cookie("token", token, { maxAge: 60 * 60 * 1000 });
-    res.status(200).json({ message: "User Logged In Successfully" });
+    res.status(200).json({ 
+      user: reply,
+      message: "User Logged In Successfully"
+    });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
@@ -103,4 +121,5 @@ export const deleteProfile = async (req, res) => {
   } catch (error) {
     res.status(500).send("Internal Server Error");
   }
-}
+};
+
