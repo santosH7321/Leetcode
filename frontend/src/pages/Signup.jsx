@@ -112,7 +112,7 @@ const Signup = () => {
           </div>
           
           <p className="text-center mt-4">
-            Already have an account? <Link href="#" className="link link-primary">Sign in</Link>
+            Already have an account? <Link to="/login" className="link link-primary">Sign in</Link>
           </p>
         </div>
       </div>
