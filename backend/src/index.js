@@ -6,9 +6,16 @@ import authRouter from "./routes/userAuth.js";
 import redisClient from "./config/redis.js";
 import problemRouter from "./routes/problem.route.js";
 import submitRouter from "./routes/submit.js"
+import cors from "cors";
 
 dotenv.config();
 const app = express();
+
+app.use(cors({
+  origin: 'http//localhost:5173',
+  credentials: true
+}))
+
 app.use(express.json());
 app.use(cookieParser());
 
