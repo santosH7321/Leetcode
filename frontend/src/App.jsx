@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router";
+import { Routes, Route, Navigate } from "react-router";
 import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -9,21 +9,22 @@ import { useEffect } from "react";
 
 
 const App = () => {
-  // check isAuthentication
-  const {isAuthenticated} = useSelector((state) => state.auth);
+
   const dispatch = useDispatch();
+  const {isAuthenticated} = useSelector((state) => state.auth);
 
 
+  // check initial authentication
   useEffect(() => {
     dispatch(checkAuth());
-  }, [isAuthenticated]);
+  }, [dispatch]);
 
   return (
     <>
       <Routes>
-        <Route path="/" element={<HomePage />}></Route>
-        <Route path="/login" element={<Login />}></Route>
-        <Route path="/signup" element={<Signup />}></Route>
+        <Route path="/" element={isAuthenticated ? <HomePage /> : <Navigate to="/signup" />}></Route>
+        <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <Login />}></Route>
+        <Route path="/signup" element={isAuthenticated ? <Navigate to="/" /> :<Signup />}></Route>
       </Routes>
     </>
   );
