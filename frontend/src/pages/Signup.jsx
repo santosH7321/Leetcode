@@ -19,6 +19,7 @@ const Signup = () => {
 
   const submittedData = (data) => {
     console.log(data);
+    
   };
 
   return (
