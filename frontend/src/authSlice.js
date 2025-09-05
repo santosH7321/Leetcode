@@ -8,7 +8,10 @@ export const registerUser = createAsyncThunk(
             const response = await axiosClient.post('/user/register', userData);
             return response.data.user;
         } catch (error) {
-            return rejectWithValue(error);
+            return rejectWithValue({
+                message: error.response?.data?.message || error.message,
+                status: error.response?.status
+            });
         }
     }
 );
@@ -20,7 +23,10 @@ export const loginUser = createAsyncThunk(
             const response = await axiosClient.post('/user/login', credentials);
             return response.data.user;
         } catch (error) {
-            return rejectWithValue(error);
+            return rejectWithValue({
+                message: error.response?.data?.message || error.message,
+                status: error.response?.status
+            });
         }
     }
 );
@@ -32,7 +38,10 @@ export const checkAuth = createAsyncThunk(
             const { data } = await axiosClient.get('/user/check');
             return data.user;
         } catch (error) {
-            return rejectWithValue(error);
+            return rejectWithValue({
+                message: error.response?.data?.message || error.message,
+                status: error.response?.status
+            });
         }
     }
 );
@@ -41,10 +50,13 @@ export const logoutUser = createAsyncThunk(
     'auth/logout',
     async (_, {rejectWithValue}) => {
         try {
-            await axiosClient.post('/logout');
+            await axiosClient.post('/user/logout'); // Fixed endpoint to be consistent
             return null;
         } catch (error) {
-            return rejectWithValue(error);
+            return rejectWithValue({
+                message: error.response?.data?.message || error.message,
+                status: error.response?.status
+            });
         }
     }
 );
@@ -58,7 +70,9 @@ const authSlice = createSlice({
         error: null
     },
     reducers: {
-        // You can add any synchronous reducers here if needed
+        clearError: (state) => {
+            state.error = null;
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -75,7 +89,7 @@ const authSlice = createSlice({
             })
             .addCase(registerUser.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload?.response?.data?.message || action.payload?.message || "Registration failed";
+                state.error = action.payload?.message || "Registration failed"; // Fixed error handling
                 state.isAuthenticated = false;
                 state.user = null;
             })
@@ -85,14 +99,14 @@ const authSlice = createSlice({
                 state.error = null;
             })
             .addCase(loginUser.fulfilled, (state, action) => {
-                state.loading = false; // Changed from true to false
+                state.loading = false; // Fixed: changed from true to false
                 state.isAuthenticated = !!action.payload;
                 state.user = action.payload;
                 state.error = null;
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload?.response?.data?.message || action.payload?.message || "Login failed";
+                state.error = action.payload?.message || "Login failed"; // Fixed error handling
                 state.isAuthenticated = false;
                 state.user = null;
             })
@@ -109,7 +123,7 @@ const authSlice = createSlice({
             })
             .addCase(checkAuth.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload?.response?.data?.message || action.payload?.message || "Authentication check failed";
+                state.error = action.payload?.message || "Authentication check failed"; // Fixed error handling
                 state.isAuthenticated = false;
                 state.user = null;
             })
@@ -126,12 +140,13 @@ const authSlice = createSlice({
             })
             .addCase(logoutUser.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload?.response?.data?.message || action.payload?.message || "Logout failed";
-                // Note: Even if logout fails, we might still want to clear auth state
+                state.error = action.payload?.message || "Logout failed"; // Fixed error handling
+                // Even if logout fails, we still clear auth state
                 state.isAuthenticated = false;
                 state.user = null;
             });
     }
 });
 
+export const { clearError } = authSlice.actions;
 export default authSlice.reducer;

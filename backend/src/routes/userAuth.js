@@ -12,9 +12,9 @@ authRouter.post("/admin/register",adminMiddleware, adminRegister);
 authRouter.delete("/deleteProfile", userMiddleware, deleteProfile);
 authRouter.get("/check", userMiddleware, (req, res) => {
     const reply = {
-        firstName: req.result.firstName,
-        email: req.result.email,
-        _id: req.result._id
+        firstName: req.user.firstName,
+        email: req.user.email,
+        _id: req.user._id
     }
     res.status(200).json({
         user: reply,
