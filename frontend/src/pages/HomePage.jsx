@@ -1,8 +1,11 @@
 import React from 'react'
+import Navbar from './Navbar'
 
 const HomePage = () => {
   return (
-    <div className='h-screen p-5 flex justify-center items-center bg-orange-500'>HomePage</div>
+    <div>
+      <Navbar />
+    </div>
   )
 }
 

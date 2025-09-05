@@ -17,7 +17,7 @@ const Signup = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { isAuthenticated, loading, error} = useSelector((state) => state.auth);
+  const { isAuthenticated, loading} = useSelector((state) => state.auth);
 
   const {
     register,
@@ -93,7 +93,7 @@ const Signup = () => {
             </div>
             
             <div className="form-control mt-6">
-              <button type="submit" className="btn btn-primary">Create Account</button>
+              <button type="submit" className={`btn btn-primary ${loading ? 'loading' : ''}`} disabled={loading} >{loading ? "Signing Up..." : "Sign Up"}</button>
             </div>
           </form>
           
